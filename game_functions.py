@@ -281,7 +281,7 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
         sleep(0.15)
         x = x + 1
 
-    sleep(0.5)
+    sleep(0.6)
 
     if stats.ships_left > 0:
         # Decrement ships_left.
