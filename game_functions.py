@@ -172,7 +172,7 @@ def update_bullets2(ai_settings, screen, stats, sb, ship, aliens, bunker, bunker
 
     # Get rid of bullets that have disappeared.
     for bulletA in bullets2.copy():
-        if bulletA.rect.bottom <= 0:
+        if bulletA.rect.top >= 600:
             bullets2.remove(bulletA)
 
     check_bullet_bunker_collisions(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2)
@@ -208,6 +208,8 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, 
         death_sound = pygame.mixer.Sound('Minecraft Oof.wav')
         death_sound.play()
         for aliens in collisions.values():
+            for alien in aliens:
+                print("I was hit!", str(alien.rect.x), str(alien.rect.y))
             """if Alien in collisions:
                 stats.score += ai_settings.alien_points3 * len(aliens)
             if Alien1 in collisions:
@@ -281,7 +283,7 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
         sleep(0.15)
         x = x + 1
 
-    sleep(0.6)
+    sleep(0.5)
 
     if stats.ships_left > 0:
         # Decrement ships_left.

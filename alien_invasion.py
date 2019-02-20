@@ -56,7 +56,7 @@ def run_game():
             gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2)
             gf.update_bunker(ai_settings, screen, stats, sb, ship, bunker, bunkers, bullets)
 
-            if pygame.time.get_ticks() % 10 == 0:
+            if pygame.time.get_ticks() % 10 == 1:
                 gf.fire_bullet2(ai_settings, screen, aliens, bullets2)
 
         gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, bunkers, bullets, bullets2, play_button, high_button)
