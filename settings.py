@@ -31,7 +31,7 @@ class Settings():
         """Initialize settings that change throughout the game."""
         self.ship_speed_factor = 1
         self.bullet_speed_factor = 3
-        self.alien_speed_factor = 0.75
+        self.alien_speed_factor = 0.25
         
         # Scoring.
         self.alien_points = 10

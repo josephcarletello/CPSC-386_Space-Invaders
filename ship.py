@@ -79,7 +79,6 @@ class Ship(Sprite):
 
     def explosion(self, x):
         self.image = self.shipex[x]
-        self.blitme()
 
     def update(self):
 

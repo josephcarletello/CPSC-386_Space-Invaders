@@ -12,8 +12,9 @@ class Bullet2(Sprite):
 
         # Create bullet rect at (0, 0), then set correct position.
         self.rect = pygame.Rect(0, 0, ai_settings.bullet_width, ai_settings.bullet_height)
-        self.rect.centerx = 250
-        self.rect.top = 50
+        for alien1 in alien:
+            self.rect.centerx = alien1.rect.x
+            self.rect.top = alien1.rect.y
 
         # Store a decimal value for the bullet's position.
         self.y = float(self.rect.y)

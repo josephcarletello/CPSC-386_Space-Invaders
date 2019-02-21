@@ -15,6 +15,8 @@ class Alien(Sprite):
         self.screen = screen
         self.ai_settings = ai_settings
         self.greenframes = []
+        self.exframes = []
+        self.lives = 0
 
         # Load the alien image, and set its rect attribute.
         sprite_sheet = SpriteSheet('images/spreadsheet.png')
@@ -36,6 +38,77 @@ class Alien(Sprite):
         self.greenframes.append(image)
 
         self.image = self.greenframes[0]
+
+        image = sprite_sheet.get_image(224, 0, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(224, 32, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(224, 64, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(192, 0, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(192, 32, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(192, 64, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(160, 0, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(160, 32, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(160, 64, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        image = sprite_sheet.get_image(128, 0, 32, 32)
+        image = pygame.transform.rotate(image, 90)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
+        self.exframes.append(image)
 
         self.rect = self.image.get_rect()
 
@@ -61,6 +134,10 @@ class Alien(Sprite):
         pos = self.rect.x
         frame = (pos // 30) % len(self.greenframes)
         self.image = self.greenframes[frame]
+
+    def explosion(self):
+        self.image = self.exframes[5]
+        self.screen.blit(self.image, self.rect)
 
     def blitme(self):
         """Draw the alien at its current location."""

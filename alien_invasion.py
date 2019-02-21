@@ -7,6 +7,9 @@ from scoreboard import Scoreboard
 from button import Button
 from Button2 import Button1
 from ship import Ship
+from alien import Alien
+from alien1 import Alien1
+from alien2 import Alien2
 from bunker import Bunker
 import game_functions as gf
 from spritesheet_functions import SpriteSheet
@@ -38,6 +41,7 @@ def run_game():
     aliens = Group()
     bunkers = Group()
     bunker = Bunker(ai_settings, screen)
+    alien = Alien(ai_settings, screen)
 
     # Create the fleet of aliens.
     gf.create_fleet(ai_settings, screen, ship, aliens)
@@ -50,16 +54,14 @@ def run_game():
 
         if stats.game_active:
             ship.update()
-            bunker.update()
-            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2)
+            gf.update_bullets(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button)
             gf.update_bullets2(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2)
             gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2)
-            gf.update_bunker(ai_settings, screen, stats, sb, ship, bunker, bunkers, bullets)
 
-            if pygame.time.get_ticks() % 10 == 1:
+            if pygame.time.get_ticks() % 1000 == 10:
                 gf.fire_bullet2(ai_settings, screen, aliens, bullets2)
 
-        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, bunkers, bullets, bullets2, play_button, high_button)
+        gf.update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button)
 
 
 run_game()

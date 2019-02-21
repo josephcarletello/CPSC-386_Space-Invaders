@@ -125,7 +125,7 @@ def fire_bullet2(ai_settings, screen, alien, bullets2):
         bullets2.add(new_bullet2)
 
 
-def update_screen(ai_settings, screen, stats, sb, ship, aliens, bunkers, bullets, bullets2, play_button, high_button):
+def update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button):
     """Update images on the screen, and flip to the new screen."""
     # Redraw the screen, each pass through the loop.
     screen.fill(ai_settings.bg_color)
@@ -136,8 +136,42 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bunkers, bullets
     for bulletA in bullets2.sprites():
         bulletA.draw_bullet2()
     ship.blitme()
-    aliens.draw(screen)
-    bunkers.draw(screen)
+    # aliens.draw(screen)
+    # bunkers.draw(screen)
+    for bunker in bunkers.sprites():
+        bunker.blitme()
+        if bunker.lives > 10:
+            bunker.image = bunker.exframes[bunker.lives-10]
+            bunker.lives = bunker.lives + 1
+        if bunker.lives > 53:
+            bunkers.remove(bunker)
+
+    for alien in aliens:
+        alien.blitme()
+        if alien.lives >= 1:
+                if alien.__class__ == Alien:
+                    alien.image = alien.exframes[alien.lives]
+                    alien.blitme()
+                    alien.lives = alien.lives + 1
+                    if alien.lives == 45:
+                        aliens.remove(alien)
+
+                if alien.__class__ == Alien1:
+                    alien.image = alien.exframes[alien.lives]
+                    alien.blitme()
+                    alien.lives = alien.lives + 1
+                    if alien.lives == 45:
+                        aliens.remove(alien)
+
+                if alien.__class__ == Alien2:
+                    alien.image = alien.exframes[alien.lives]
+                    alien.blitme()
+                    alien.lives = alien.lives + 1
+                    if alien.lives == 45:
+                        aliens.remove(alien)
+            # stats.score += ai_settings.alien_points * len(aliens)
+
+    # alien.explosion()
 
     # Draw the score information.
     sb.show_score()
@@ -151,7 +185,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bunkers, bullets
     pygame.display.flip()
 
 
-def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2):
+def update_bullets(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button):
     """Update position of bullets, and get rid of old bullets."""
     # Update bullet positions.
     bullets.update()
@@ -161,7 +195,7 @@ def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
             
-    check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets)
+    check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button)
     check_bullet_bunker_collisions(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2)
 
 
@@ -189,34 +223,38 @@ def check_high_score(stats, sb):
 def check_bullet_ship_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
     """Respond to bullet-alien collisions."""
     # Remove any bullets and aliens that have collided.
-    """ collisions = pygame.sprite.spritecollide(bullets2, ship, True, True)
+    collisions = pygame.sprite.spritecollide(ship, bullets2, True)
 
     if collisions:
-
         death_sound = pygame.mixer.Sound('Minecraft Oof.wav')
         death_sound.play()
-        ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2)"""
+        ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2)
 
 
-def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, bullets):
+
+
+def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button):
     """Respond to bullet-alien collisions."""
     # Remove any bullets and aliens that have collided.
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, False)
 
     if collisions:
 
         death_sound = pygame.mixer.Sound('Minecraft Oof.wav')
         death_sound.play()
+
         for aliens in collisions.values():
             for alien in aliens:
-                print("I was hit!", str(alien.rect.x), str(alien.rect.y))
-            """if Alien in collisions:
-                stats.score += ai_settings.alien_points3 * len(aliens)
-            if Alien1 in collisions:
-                stats.score += ai_settings.alien_points2 * len(aliens)
-            if Alien2 in collisions:
-                stats.score += ai_settings.alien_points * len(aliens)"""
-            stats.score += ai_settings.alien_points * len(aliens)
+                alien.lives = 1
+                if alien.__class__ == Alien:
+                    stats.score += ai_settings.alien_points3
+
+                if alien.__class__ == Alien1:
+                    stats.score += ai_settings.alien_points2
+
+                if alien.__class__ == Alien2:
+                    stats.score += ai_settings.alien_points
+            # stats.score += ai_settings.alien_points * len(aliens)
             sb.prep_score()
         check_high_score(stats, sb)
     
@@ -232,12 +270,26 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens, 
         create_fleet(ai_settings, screen, ship, aliens)
 
 
+def update_screen4(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button):
+    """Update images on the screen, and flip to the new screen."""
+    # Redraw the screen, each pass through the loop.
+    timer = pygame.time.get_ticks()
+    alien.blitme()
+    passed = pygame.time.get_ticks() - timer
+    if passed <= 200 or 400 < passed <= 600:
+        alien.blitme()
+    elif 600 < passed:
+        alien.update()
+
+
 def check_bullet_bunker_collisions(ai_settings, screen, stats, sb, ship, aliens, bunker, bunkers, bullets, bullets2):
     """Respond to bullet-alien collisions."""
     # Remove any bullets and aliens that have collided.
     collisions = pygame.sprite.groupcollide(bullets, bunkers, True, False)
     if collisions:
-        bunker_hit(ai_settings, screen, stats, sb, bunker, bunkers, ship,  aliens, bullets)
+        bunker_hit(ai_settings, screen, stats, sb, bunker, bunkers, ship, aliens, bullets)
+        bunker.lives = bunker.lives + 1
+
         # for bunkers in collisions.values():
 
 
@@ -313,10 +365,12 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
 
 def bunker_hit(ai_settings, screen, stats, sb, bunker, bunkers, ship, aliens, bullets):
     """Respond to bunker being hit by bullet."""
-    bunker.hit()
-    bunker.blitme()
-    if bunker.lives > 11:
-        pygame.sprite.groupcollide(bullets, bunkers, True, True)
+
+    if bunker.lives < 11:
+        for bunker in bunkers:
+            bunker.lives = bunker.lives + 1
+            bunker.image = bunker.frames[bunker.lives]
+            bunker.update()
 
 
 def update_screen3(ai_settings, ship, screen, sb, aliens, bunker, bunkers):
@@ -344,7 +398,7 @@ def check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets, b
             break
 
 
-def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets,bullets2):
+def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
     """
     Check if the fleet is at an edge,
       then update the postions of all aliens in the fleet.
@@ -383,10 +437,6 @@ def create_bunker(ai_settings, screen, bunkers, bunker_number, row_number):
     bunker.rect.y = 450
     # bunker.rect.y = bunker.rect.height + 4 * bunker.rect.height * row_number * 0.5
     bunkers.add(bunker)
-
-
-def update_bunker(ai_settings, screen, stats, sb, ship, bunker, bunkers, bullets):
-    bunker.update()
 
 
 def create_alien(ai_settings, screen, aliens, alien_number, row_number):
