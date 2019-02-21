@@ -138,13 +138,16 @@ def update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, b
     ship.blitme()
     # aliens.draw(screen)
     # bunkers.draw(screen)
-    for bunker in bunkers.sprites():
-        bunker.blitme()
-        if bunker.lives > 10:
-            bunker.image = bunker.exframes[bunker.lives-10]
-            bunker.lives = bunker.lives + 1
-        if bunker.lives > 53:
-            bunkers.remove(bunker)
+    if bunker.alive() == False:
+        for bunker in bunkers.sprites():
+            bunker.blitme()
+            if bunker.lives > 10:
+                explosion = pygame.mixer.Sound('EXPLOSION SOUND EFFECT.wav')
+                explosion.play()
+                bunker.image = bunker.exframes[bunker.lives-10]
+                bunker.lives = bunker.lives + 1
+            if bunker.lives > 53:
+                bunkers.remove(bunker)
 
     for alien in aliens:
         alien.blitme()
@@ -155,6 +158,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, b
                     alien.lives = alien.lives + 1
                     if alien.lives == 45:
                         aliens.remove(alien)
+                        alien.lives = 0
 
                 if alien.__class__ == Alien1:
                     alien.image = alien.exframes[alien.lives]
@@ -162,6 +166,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, b
                     alien.lives = alien.lives + 1
                     if alien.lives == 45:
                         aliens.remove(alien)
+                        alien.lives = 0
 
                 if alien.__class__ == Alien2:
                     alien.image = alien.exframes[alien.lives]
@@ -169,6 +174,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, b
                     alien.lives = alien.lives + 1
                     if alien.lives == 45:
                         aliens.remove(alien)
+                        alien.lives = 0
             # stats.score += ai_settings.alien_points * len(aliens)
 
     # alien.explosion()
@@ -262,6 +268,10 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, alien, a
         # If the entire fleet is destroyed, start a new level.
         bullets.empty()
         ai_settings.increase_speed()
+        # bunkers.empty()
+        # create_bunkers(ai_settings, screen, ship, bunkers)
+
+
         
         # Increase level.
         stats.level += 1
@@ -287,6 +297,11 @@ def check_bullet_bunker_collisions(ai_settings, screen, stats, sb, ship, aliens,
     # Remove any bullets and aliens that have collided.
     collisions = pygame.sprite.groupcollide(bullets, bunkers, True, False)
     if collisions:
+        bunker_hit(ai_settings, screen, stats, sb, bunker, bunkers, ship, aliens, bullets)
+        bunker.lives = bunker.lives + 1
+
+    collisions2 = pygame.sprite.groupcollide(bullets2, bunkers, True, False)
+    if collisions2:
         bunker_hit(ai_settings, screen, stats, sb, bunker, bunkers, ship, aliens, bullets)
         bunker.lives = bunker.lives + 1
 
@@ -349,14 +364,15 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, bullets2):
         pygame.mouse.set_visible(True)
     
     # Empty the list of aliens and bullets.
-    aliens.empty()
+    # aliens.empty()
     bullets.empty()
+    bullets2.empty()
 
 
 
 
     # Create a new fleet, and center the ship.
-    create_fleet(ai_settings, screen, ship, aliens)
+    # create_fleet(ai_settings, screen, ship, aliens)
     ship.center_ship()
     
     # Pause.
@@ -436,6 +452,7 @@ def create_bunker(ai_settings, screen, bunkers, bunker_number, row_number):
     bunker.rect.x = bunker.x
     bunker.rect.y = 450
     # bunker.rect.y = bunker.rect.height + 4 * bunker.rect.height * row_number * 0.5
+    bunker.lives = 0
     bunkers.add(bunker)
 
 
