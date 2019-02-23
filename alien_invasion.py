@@ -1,4 +1,5 @@
 import pygame
+import pygame.font
 from pygame.sprite import Group
 
 from settings import Settings
@@ -28,6 +29,11 @@ def run_game():
     # Make the Play button.
     high_button = Button1(ai_settings, screen, "")
     play_button = Button(ai_settings, screen, "Play Now")
+
+    high_score_file = open("high_score.txt", "r")
+    high_score = int(high_score_file.read())
+    high_score_file.close()
+    print("The high score is", high_score)
 
     
     # Create an instance to store game statistics, and a scoreboard.
@@ -63,5 +69,9 @@ def run_game():
 
         gf.update_screen(ai_settings, screen, stats, sb, ship, alien, aliens, bunker, bunkers, bullets, bullets2, play_button, high_button)
 
+        if stats.score > high_score:
+            high_score_file = open("high_score.txt", "w")
+            high_score_file.write(str(stats.score))
+            high_score_file.close()
 
 run_game()
